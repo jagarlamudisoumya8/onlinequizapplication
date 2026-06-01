@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>Profile</h1><p>Manage account details, password, certificates, and quiz history.</p></div></section>
+<section class="container section">
+  <div class="row g-4">
+    <div class="col-lg-7"><div class="panel"><h4>Edit Information</h4><form method="post" enctype="multipart/form-data" class="row g-3">{% csrf_token %}<input type="hidden" name="form_type" value="profile">{% for field in form %}<div class="col-md-6"><label class="form-label">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>{% endfor %}<div class="col-12"><button class="btn btn-primary">Save Profile</button></div></form></div></div>
+    <div class="col-lg-5"><div class="panel"><h4>Change Password</h4><form method="post" class="vstack gap-3">{% csrf_token %}<input type="hidden" name="form_type" value="password">{% for field in password_form %}<div><label class="form-label">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>{% endfor %}<button class="btn btn-outline-primary">Change Password</button></form></div></div>
+  </div>
+  <div class="row g-4 mt-2">
+    <div class="col-lg-6"><div class="panel"><h4>Certificates</h4>{% for certificate in certificates %}<a class="activity" href="{% url 'certificate_detail' certificate.certificate_id %}"><span>{{ certificate.attempt.quiz.title }}</span><strong>{{ certificate.issued_at|date:"d M Y" }}</strong></a>{% empty %}<p class="text-muted">Pass a quiz to earn certificates.</p>{% endfor %}</div></div>
+    <div class="col-lg-6"><div class="panel"><h4>Quiz History</h4>{% for attempt in attempts %}<a class="activity" href="{% url 'result_detail' attempt.id %}"><span>{{ attempt.quiz.title }}</span><strong>{{ attempt.percentage }}%</strong></a>{% empty %}<p class="text-muted">No completed quizzes yet.</p>{% endfor %}</div></div>
+  </div>
+</section>
+{% endblock %}

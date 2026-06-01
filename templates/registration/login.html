@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Login | QuizLearn{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-card">
+    <h1>Welcome back</h1>
+    <p class="text-muted">Login with your username or email to continue learning.</p>
+    <form method="post" class="vstack gap-3">{% csrf_token %}
+      {% for field in form %}<div><label class="form-label">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>{% endfor %}
+      {{ form.non_field_errors }}
+      <button class="btn btn-primary w-100">Login</button>
+    </form>
+    <div class="d-flex justify-content-between mt-3 small"><a href="{% url 'password_reset' %}">Forgot password?</a><a href="{% url 'register' %}">Create account</a></div>
+  </div>
+</section>
+{% endblock %}

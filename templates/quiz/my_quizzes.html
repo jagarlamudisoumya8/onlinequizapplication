@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>My Quizzes</h1><p>All started and completed quiz attempts.</p></div></section>
+<section class="container section">
+    <div class="table-responsive soft-table">
+        <table class="table align-middle">
+            <thead><tr><th>Quiz</th><th>Course</th><th>Status</th><th>Score</th><th></th></tr></thead><tbody>{% for attempt in attempts %}<tr><td>{{ attempt.quiz.title }}</td><td>{{ attempt.quiz.course.title }}</td><td>{% if attempt.is_submitted %}<span class="badge text-bg-success">Submitted</span>{% else %}<span class="badge text-bg-warning">In Progress</span>{% endif %}</td><td>{{ attempt.percentage }}%</td><td>{% if attempt.is_submitted %}<a href="{% url 'result_detail' attempt.id %}">View Result</a>{% else %}<a href="{% url 'take_quiz' attempt.id %}">Continue</a>{% endif %}</td></tr>{% empty %}<tr><td colspan="5">No quizzes yet.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

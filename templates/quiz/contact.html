@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>AI Instant Support</h1>
+    <p>Ask questions and receive instant answers without reloading the page.</p>
+  </div>
+</section>
+<section class="container section">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="support-chat">
+        <div class="support-chat-head">
+          <div><h4>AI Assistant</h4><span>Session chat history stays available while you browse.</span></div>
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="support-chat-messages" id="contactAiMessages">
+          <div class="ai-bubble ai-bot">Hi, I can help with registration, login, quizzes, certificates, results, and course guidance.</div>
+          {% for item in chat_history %}
+            <div class="ai-bubble ai-user">{{ item.message }}</div>
+            <div class="ai-bubble ai-bot">{{ item.response }}</div>
+          {% endfor %}
+        </div>
+        <form class="ai-form contact-ai-form" id="contactAiForm" data-endpoint="{% url 'ai_chat' %}">
+          {% csrf_token %}
+          <input id="contactAiInput" class="form-control" placeholder="Ask: How can I download my certificate?" autocomplete="off">
+          <button class="btn btn-primary" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="panel">
+        <h4>Contact Form</h4>
+        <form method="post" class="row g-3">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="{% if field.name == 'message' %}col-12{% else %}col-md-6{% endif %}">
+              <label class="form-label">{{ field.label }}</label>{{ field }}
+            </div>
+          {% endfor %}
+          <div class="col-12"><button class="btn btn-primary">Send Message</button></div>
+        </form>
+        <hr>
+        <p><i class="fa-solid fa-envelope me-2"></i>support@quizlearn.test</p>
+        <p><i class="fa-solid fa-phone me-2"></i>+91 98765 43210</p>
+        <p><i class="fa-solid fa-location-dot me-2"></i>Hyderabad, India</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

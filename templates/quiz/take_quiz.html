@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load quiz_extras %}
+{% block title %}{{ attempt.quiz.title }} | QuizLearn{% endblock %}
+{% block content %}
+<section
+  class="quiz-shell"
+  data-attempt="{{ attempt.id }}"
+  data-save-url="{% url 'save_answer' attempt.id %}"
+  data-submit-url="{% url 'submit_quiz' attempt.id %}"
+  data-ends-at="{{ attempt.ends_at|date:'c' }}"
+  data-remaining-seconds="{{ remaining_seconds }}"
+  data-total-questions="{{ questions|length }}">
+  <div class="container">
+    <div class="quiz-top">
+      <div>
+        <h1>{{ attempt.quiz.title }}</h1>
+        <p>{{ attempt.quiz.course.title }} - {{ questions|length }} Questions - {{ attempt.quiz.duration_minutes }} Minutes - Pass Mark {{ attempt.quiz.pass_percentage }}%</p>
+      </div>
+      <div class="timer" id="timerBox"><i class="fa-regular fa-clock"></i><span id="timer">00:00:00</span></div>
+    </div>
+
+    <div class="progress-label">
+      <span id="questionProgressText">Question 1 of {{ questions|length }}</span>
+      <strong id="progressPercent">0%</strong>
+    </div>
+    <div class="progress mb-4"><div class="progress-bar" id="quizProgress" style="width:0%"></div></div>
+
+    <div class="quiz-layout">
+      <aside class="quiz-side">
+        <h5>Quiz Status</h5>
+        <div class="status-row"><span class="dot attempted"></span>Total Questions <strong id="totalCount">{{ questions|length }}</strong></div>
+        <div class="status-row"><span class="dot attempted"></span>Attempted <strong id="attemptedCount">0</strong></div>
+        <div class="status-row"><span class="dot not-attempted"></span>Unattempted <strong id="notAttemptedCount">{{ questions|length }}</strong></div>
+        <div class="status-row"><span class="dot visited"></span>Visited <strong id="visitedCount">1</strong></div>
+        <div class="status-row"><span class="dot not-visited"></span>Not Visited <strong id="notVisitedCount">{{ questions|length|add:"-1" }}</strong></div>
+
+        <h5 class="mt-4">Question Palette</h5>
+        <div class="question-palette" id="questionPalette">
+          {% for question in questions %}
+            <button type="button" class="palette-btn {% if forloop.first %}current{% endif %}" data-index="{{ forloop.counter0 }}" aria-label="Question {{ forloop.counter }}">{{ forloop.counter }}</button>
+          {% endfor %}
+        </div>
+        <div class="palette-legend">
+          <span><i class="dot attempted"></i>Answered</span>
+          <span><i class="dot visited"></i>Visited, not answered</span>
+          <span><i class="dot not-visited"></i>Not visited</span>
+          <span><i class="dot current"></i>Current</span>
+        </div>
+      </aside>
+
+      <form method="post" action="{% url 'submit_quiz' attempt.id %}" id="quizForm" class="quiz-main">
+        {% csrf_token %}
+        {% for question in questions %}
+          <article class="question-card {% if not forloop.first %}d-none{% endif %}" data-question-index="{{ forloop.counter0 }}" data-question-id="{{ question.id }}">
+            <span class="pill">Question {{ forloop.counter }} of {{ questions|length }}</span>
+            <h4>{{ question.text }}</h4>
+            <div class="vstack gap-2 mt-3">
+              {% with selected=answers|get_item:question.id %}
+                {% for choice in question.choices.all %}
+                  <label class="choice">
+                    <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}" data-question="{{ question.id }}" {% if selected == choice.id %}checked{% endif %}>
+                    <span>{{ choice.text }}</span>
+                  </label>
+                {% endfor %}
+              {% endwith %}
+            </div>
+          </article>
+        {% endfor %}
+        <div class="quiz-actions">
+          <button type="button" class="btn btn-outline-primary" id="prevBtn"><i class="fa-solid fa-arrow-left me-2"></i>Previous</button>
+          <button type="button" class="btn btn-primary" id="nextBtn">Next<i class="fa-solid fa-arrow-right ms-2"></i></button>
+          <button type="submit" class="btn btn-success" id="submitBtn"><i class="fa-solid fa-paper-plane me-2"></i>Submit Quiz</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

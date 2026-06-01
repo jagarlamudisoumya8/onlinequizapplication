@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} | QuizLearn{% endblock %}
+{% block content %}
+<section class="course-hero">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-7"><span class="pill">{{ course.level|title }}</span><h1>{{ course.title }}</h1><p>{{ course.description }}</p><div class="meta-line"><span><i class="fa-regular fa-clock"></i> {{ course.duration }}</span><span><i class="fa-solid fa-chalkboard-user"></i> {{ course.instructor_name }}</span></div></div>
+      <div class="col-lg-5"><img class="detail-image" src="{{ course.image_url }}" alt="{{ course.title }}"></div>
+    </div>
+  </div>
+</section>
+<section class="container section">
+  <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h3 mb-0">Available quizzes</h2><button class="btn btn-soft" onclick="window.dispatchEvent(new CustomEvent('open-ai',{detail:'Explain this course: {{ course.title }}'}))"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Ask AI Tutor</button></div>
+  <div class="row g-3">
+    {% for quiz in course.quizzes.all %}
+      {% if quiz.is_active %}
+      <div class="col-md-6"><div class="quiz-card"><h5>{{ quiz.title }}</h5><p>{{ quiz.description|default:"Test your understanding with a timed quiz." }}</p><div class="d-flex justify-content-between align-items-center"><span>{{ quiz.duration_minutes }} min · Pass {{ quiz.pass_percentage }}%</span>{% if user.is_authenticated %}<a class="btn btn-primary" href="{% url 'start_quiz' quiz.slug %}">Start Quiz</a>{% else %}<a class="btn btn-primary" href="{% url 'login' %}">Login to Start</a>{% endif %}</div></div></div>
+      {% endif %}
+    {% empty %}
+      <div class="empty-state">Quizzes will appear here after the admin creates them.</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

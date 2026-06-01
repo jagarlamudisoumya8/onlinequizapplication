@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="eyebrow">Modern online assessment</span>
+        <h1>Learn faster with quizzes, instant results, and certificates.</h1>
+        <p>Explore courses, test your skills, track progress, and get AI support whenever you need a study nudge.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a class="btn btn-primary btn-lg" href="{% if user.is_authenticated %}{% url 'courses' %}{% else %}{% url 'register' %}{% endif %}">Start Quiz</a>
+          <a class="btn btn-outline-primary btn-lg" href="{% url 'courses' %}">Explore Courses</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-visual">
+          <div class="score-card"><strong>92%</strong><span>Average Growth</span></div>
+          <div class="mini-chart"></div>
+          <div class="lesson-card"><i class="fa-solid fa-award"></i><span>Certificate Ready</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container section">
+  <div class="section-title"><h2>Everything students expect</h2><p>Clean tools for assessment, feedback, and growth.</p></div>
+  <div class="row g-4">
+    <div class="col-md"><div class="feature-card blue"><i class="fa-regular fa-clock"></i><h5>Timed Quizzes</h5><p>Focused tests with persistent timers.</p></div></div>
+    <div class="col-md"><div class="feature-card green"><i class="fa-solid fa-chart-simple"></i><h5>Instant Results</h5><p>Score cards and performance messages.</p></div></div>
+    <div class="col-md"><div class="feature-card orange"><i class="fa-solid fa-certificate"></i><h5>Certificates</h5><p>Download verified completion PDFs.</p></div></div>
+    <div class="col-md"><div class="feature-card purple"><i class="fa-solid fa-trophy"></i><h5>Leaderboards</h5><p>Weekly, monthly, and all-time ranks.</p></div></div>
+    <div class="col-md"><div class="feature-card blue"><i class="fa-solid fa-route"></i><h5>Progress Tracking</h5><p>Dashboards and AI recommendations.</p></div></div>
+  </div>
+</section>
+<section class="soft-band">
+  <div class="container section">
+    <div class="section-title"><h2>Popular courses</h2><p>Start with a course and take related quizzes.</p></div>
+    <div class="row g-4">
+      {% for course in courses %}
+        <div class="col-md-4">{% include "quiz/partials/course_card.html" %}</div>
+      {% empty %}
+        <div class="col-12"><div class="empty-state">Courses created in admin will appear here.</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<section class="container section">
+  <div class="stats-grid">
+    <div><strong>{{ stats.students }}</strong><span>Total Students</span></div>
+    <div><strong>{{ stats.quizzes }}</strong><span>Total Quizzes</span></div>
+    <div><strong>{{ stats.courses }}</strong><span>Total Courses</span></div>
+    <div><strong>{{ stats.certificates }}</strong><span>Certificates Issued</span></div>
+  </div>
+</section>
+<section class="container section">
+  <div class="section-title"><h2>Student reviews</h2><p>Built for confidence and clarity.</p></div>
+  <div class="row g-4">
+    <div class="col-md-4"><div class="testimonial">“The instant result analysis helped me know exactly what to revise.”<span>Aarav, Python Student</span></div></div>
+    <div class="col-md-4"><div class="testimonial">“Certificates download immediately and the dashboard feels simple.”<span>Meera, Web Learner</span></div></div>
+    <div class="col-md-4"><div class="testimonial">“The AI assistant makes quiz prep less stressful.”<span>Kabir, Django Student</span></div></div>
+  </div>
+</section>
+{% endblock %}

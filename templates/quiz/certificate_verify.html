@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-shell"><div class="auth-card wide text-center"><i class="fa-solid fa-circle-check text-success display-4"></i><h1>Certificate Verified</h1><p>{{ certificate.attempt.user.get_full_name|default:certificate.attempt.user.username }} completed {{ certificate.attempt.quiz.title }} with {{ certificate.attempt.percentage }}% on {{ certificate.issued_at|date:"d M Y" }}.</p><p class="small text-muted">Certificate ID: {{ certificate.certificate_id }}</p></div></section>
+{% endblock %}

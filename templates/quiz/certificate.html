@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container section">
+  <div class="certificate">
+    <div class="certificate-border">
+      <p class="eyebrow">Certificate of Achievement</p>
+      <h1>{{ certificate.attempt.user.get_full_name|default:certificate.attempt.user.username }}</h1>
+      <p>has successfully completed</p>
+      <h2>{{ certificate.attempt.quiz.course.title }}</h2>
+      <p>with a score of {{ certificate.attempt.percentage }}%</p>
+      <div class="cert-meta">
+        <span>Date: {{ certificate.issued_at|date:"d M Y" }}</span>
+        <span>Certificate Number: {{ certificate.certificate_id }}</span>
+      </div>
+      <p class="signature">Authorized Signature</p>
+      <div class="qr-box"><span>Verify Certificate</span><small>{{ verify_url }}</small></div>
+    </div>
+  </div>
+  <div class="text-center mt-4 d-flex gap-3 justify-content-center flex-wrap">
+    <a class="btn btn-primary" href="{% url 'certificate_pdf' certificate.certificate_id %}"><i class="fa-solid fa-download me-2"></i>Download PDF</a>
+    <button class="btn btn-outline-primary" type="button" onclick="navigator.share ? navigator.share({title:'My certificate',url:location.href}) : navigator.clipboard.writeText(location.href)">Share Certificate</button>
+  </div>
+</section>
+{% endblock %}

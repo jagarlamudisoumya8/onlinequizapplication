@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>Results</h1><p>Your completed quiz results and certificates.</p></div></section>
+<section class="container section"><div class="row g-3">{% for attempt in attempts %}<div class="col-md-6"><div class="result-card"><div><h5>{{ attempt.quiz.title }}</h5><p>{{ attempt.quiz.course.title }}</p></div><strong>{{ attempt.percentage }}%</strong><a class="btn btn-outline-primary" href="{% url 'result_detail' attempt.id %}">Details</a></div></div>{% empty %}<div class="empty-state">Completed quiz results will appear here.</div>{% endfor %}</div></section>
+{% endblock %}

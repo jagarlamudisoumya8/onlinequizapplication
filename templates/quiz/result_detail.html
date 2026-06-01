@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load quiz_extras %}
+{% block content %}
+<section class="page-head" {% if certificate %}data-page-notify="Certificate generated" data-page-notify-type="success"{% endif %}>
+  <div class="container">
+    <h1>{{ attempt.quiz.title }} Result</h1>
+    <p>{{ attempt.quiz.course.title }} - {% if attempt.is_passed %}<span class="status-pass">PASS</span>{% else %}<span class="status-fail">FAIL</span>{% endif %} - Pass mark {{ attempt.quiz.pass_percentage }}%</p>
+  </div>
+</section>
+<section class="container section">
+  <div class="row g-3 mb-4">
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.total_questions }}</strong><span>Total Questions</span></div></div>
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.correct_answers }}</strong><span>Correct Answers</span></div></div>
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.wrong_answers }}</strong><span>Incorrect Answers</span></div></div>
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.unanswered_questions }}</strong><span>Not Answered</span></div></div>
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.percentage }}%</strong><span>Percentage</span></div></div>
+    <div class="col-md-2"><div class="metric"><strong>{{ attempt.time_taken|duration_hms }}</strong><span>Time Taken</span></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="panel">
+        <h4>Quiz Summary</h4>
+        <div class="progress-label"><span>Correct Answers</span><strong>{{ attempt.correct_answers }}/{{ attempt.total_questions }}</strong></div>
+        <div class="progress mb-3"><div class="progress-bar bg-success" style="width: {{ attempt.correct_answers|percent_of:attempt.total_questions }}%"></div></div>
+        <div class="progress-label"><span>Incorrect Answers</span><strong>{{ attempt.wrong_answers }}/{{ attempt.total_questions }}</strong></div>
+        <div class="progress mb-3"><div class="progress-bar bg-danger" style="width: {{ attempt.wrong_answers|percent_of:attempt.total_questions }}%"></div></div>
+        <div class="progress-label"><span>Not Answered</span><strong>{{ attempt.unanswered_questions }}/{{ attempt.total_questions }}</strong></div>
+        <div class="progress mb-4"><div class="progress-bar bg-secondary" style="width: {{ attempt.unanswered_questions|percent_of:attempt.total_questions }}%"></div></div>
+        <h5>Status</h5>
+        <p>{% if attempt.is_passed %}Passed{% else %}Failed{% endif %} with {{ attempt.percentage }}%. Certificate eligibility starts at {{ attempt.quiz.pass_percentage }}%.</p>
+        <h5>AI Result Analysis</h5>
+        <p>{{ attempt.ai_feedback|linebreaksbr }}</p>
+        {% if certificate %}
+          <a class="btn btn-primary" href="{% url 'certificate_pdf' certificate.certificate_id %}"><i class="fa-solid fa-download me-2"></i>Download Certificate</a>
+          <a class="btn btn-outline-primary ms-sm-2 mt-2 mt-sm-0" href="{% url 'certificate_detail' certificate.certificate_id %}">View Certificate</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="panel chart-panel">
+        <h4>Answer Breakdown</h4>
+        <canvas id="resultPie" data-values="{{ pie_values|join:',' }}"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

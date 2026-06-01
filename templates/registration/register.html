@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Register | QuizLearn{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-card wide">
+    <h1>Create student account</h1>
+    <p class="text-muted">No approval needed. Register and start learning instantly.</p>
+    <form method="post" class="row g-3">{% csrf_token %}
+      {% for field in form %}<div class="col-md-6"><label class="form-label">{{ field.label }}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>{% endfor %}
+      {{ form.non_field_errors }}
+      <div class="col-12"><button class="btn btn-primary">Register</button></div>
+    </form>
+  </div>
+</section>
+{% endblock %}

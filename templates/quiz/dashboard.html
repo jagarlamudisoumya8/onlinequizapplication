@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | QuizLearn{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>Student Dashboard</h1><p>Your courses, certificates, latest results, notifications, and performance trends.</p></div></section>
+<section class="container section">
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="metric animated-card"><i class="fa-solid fa-layer-group"></i><strong>{{ total_courses }}</strong><span>Total Courses</span></div></div>
+    <div class="col-md-3"><div class="metric animated-card"><i class="fa-solid fa-circle-check"></i><strong>{{ completed_courses }}</strong><span>Completed Courses</span></div></div>
+    <div class="col-md-3"><div class="metric animated-card"><i class="fa-solid fa-certificate"></i><strong>{{ certificates }}</strong><span>Certificates Earned</span></div></div>
+    <div class="col-md-3"><div class="metric animated-card"><i class="fa-solid fa-chart-line"></i><strong>{{ average_score }}%</strong><span>Average Score</span></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-8"><div class="panel"><h4>Performance Chart</h4><canvas id="performanceChart" data-labels="{{ chart_labels|join:',' }}" data-values="{{ chart_values|join:',' }}"></canvas></div></div>
+    <div class="col-lg-4"><div class="panel"><h4>Recent Notifications</h4>{% for note in recent_notifications %}<div class="activity"><span>{{ note.text }}</span><strong>{{ note.type|title }}</strong></div>{% empty %}<p class="text-muted">Notifications will appear here after quiz activity.</p>{% endfor %}</div></div>
+  </div>
+  <div class="row g-4 mt-1">
+    <div class="col-lg-6"><div class="panel"><h4>Latest Results</h4>{% for result in latest_results %}<a class="activity" href="{% url 'result_detail' result.attempt.id %}"><span>{{ result.course.title }}</span><strong>{{ result.percentage }}%</strong></a>{% empty %}<p class="text-muted">No submitted quizzes yet.</p>{% endfor %}</div></div>
+    <div class="col-lg-6"><div class="panel"><h4>Progress</h4><div class="progress-label"><span>Course Completion</span><strong>{{ completed_courses }}/{{ total_courses }}</strong></div><div class="progress mb-3"><div class="progress-bar" style="width:{% widthratio completed_courses total_courses 100 %}%"></div></div><div class="progress-label"><span>Average Score</span><strong>{{ average_score }}%</strong></div><div class="progress"><div class="progress-bar bg-success" style="width:{{ average_score }}%"></div></div></div></div>
+  </div>
+  <h3 class="mt-5 mb-3">Recommended Courses</h3>
+  <div class="row g-4">{% for course in recommended_courses %}<div class="col-md-4">{% include "quiz/partials/course_card.html" %}</div>{% empty %}<div class="empty-state">Take a quiz to unlock better recommendations.</div>{% endfor %}</div>
+</section>
+{% endblock %}

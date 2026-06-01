@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Courses | QuizLearn{% endblock %}
+{% block content %}
+<section class="page-head" data-page-notify="New course catalog loaded" data-page-notify-type="info"><div class="container"><h1>Courses</h1><p>Choose a course and start a related quiz.</p></div></section>
+<section class="container section">
+  <div class="row g-4">
+    {% for course in page_obj %}
+      <div class="col-md-6 col-lg-4">{% include "quiz/partials/course_card.html" %}</div>
+    {% empty %}
+      <div class="empty-state">No courses are published yet.</div>
+    {% endfor %}
+  </div>
+  {% if page_obj.has_other_pages %}<nav class="mt-4"><ul class="pagination justify-content-center">{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}<li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}</ul></nav>{% endif %}
+</section>
+{% endblock %}
