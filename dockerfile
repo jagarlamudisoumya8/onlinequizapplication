@@ -1,4 +1,4 @@
-ROM python:3.14.5
+FROM python:3.14.5
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 10000
 
-CMD ["gunicorn","onlinequizapplication.wsgi:application","--bind","0.0.0.0:10000"]
+CMD ["gunicorn","quizplatform.wsgi:application","--bind","0.0.0.0:10000"]
